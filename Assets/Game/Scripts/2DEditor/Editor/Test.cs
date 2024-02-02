@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.XR;
+using UnityEngine.SceneManagement;
 
 public class Test : EditorWindow
 {
@@ -25,13 +26,27 @@ public class Test : EditorWindow
     private const int _unitCellLength = 1;
     private const int _coloumnNum = 2;
     private static bool buttonPressed = false;
+    
+    private const string SCENE_NAME = "EditorScene";
+    
     private void OnGUI()
     {
+        if (SceneManager.GetActiveScene().name != SCENE_NAME)
+        {
+            GUILayout.BeginVertical();
+            {
+                GUILayout.Label("请运行_Talk场景");
+            }
+            GUILayout.EndVertical();
+            return;
+        }
+      
         GUILayout.BeginVertical();
         {
             List<Texture2D> _texs = new List<Texture2D>();
             foreach (var val in _prefabList)
             {
+                Debug.Log(val);
                 _texs.Add(AssetPreview.GetAssetPreview(val));
             }
             
@@ -145,6 +160,8 @@ public class Test : EditorWindow
         }
     }
 
+    private Dictionary<Vector2D, GameObject> _allCells = new Dictionary<Vector2D, GameObject>();
+    
     private static void BuildCell(GameObject nPrefab, Vector3 nAimPos)
     {
         if (nPrefab != null)

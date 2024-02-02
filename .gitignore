@@ -1,0 +1,17 @@
+#---------------------Unity Generate---------------------
+[Ll]ibrary/
+[Ll]ogs/
+[Pp]ackages/
+[Tt]emp/
+[Uu]serSettings/
+obj/
+Assets/_Csv
+
+#---------------------VS Generate---------------------
+.vsconfig
+.vs/
+*.csproj
+*.sln
+
+#---------------------Rider Generate---------------------
+.idea
