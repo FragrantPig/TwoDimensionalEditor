@@ -1,19 +1,20 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Game.Scripts._2DEditor;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.XR;
 using UnityEngine.SceneManagement;
 
-public class Test : EditorWindow
+public class TwoDimensionalEditor : EditorWindow
 {
     [SerializeField] private static Transform _root;
     
     [MenuItem("测试/TwoDimensionalEditor")]
     private static void OpenWindow()
     {
-        EditorWindow.CreateWindow<Test>();
+        EditorWindow.CreateWindow<TwoDimensionalEditor>();
     }
 
     private static GameObject _prefab;
@@ -46,7 +47,6 @@ public class Test : EditorWindow
             List<Texture2D> _texs = new List<Texture2D>();
             foreach (var val in _prefabList)
             {
-                Debug.Log(val);
                 _texs.Add(AssetPreview.GetAssetPreview(val));
             }
             
@@ -160,15 +160,34 @@ public class Test : EditorWindow
         }
     }
 
-    private Dictionary<Vector2D, GameObject> _allCells = new Dictionary<Vector2D, GameObject>();
+    private static List<Cell2D> _allCells = new List<Cell2D>();
     
     private static void BuildCell(GameObject nPrefab, Vector3 nAimPos)
     {
-        if (nPrefab != null)
+        Vector3D nAim3D = new Vector3D(nAimPos);
+        if (!ExistCellOrNot(nAim3D))
         {
-            var nGo = Instantiate(_selectGo,nAimPos, new Quaternion(0, 0, 0, 0), _root);
-            _allBuildGoList.Add(nGo);
+            if (nPrefab != null)
+            {
+                var nGo = Instantiate(_selectGo,nAimPos, new Quaternion(0, 0, 0, 0), _root);
+                _allBuildGoList.Add(nGo);
+                var cell = nGo.GetComponent<Cell2D>();
+                cell._pos = new Vector3D(nAimPos);
+                _allCells.Add(cell);
+            }    
         }
+    }
+
+    private static bool ExistCellOrNot(Vector3D nAim)
+    {
+        foreach (var val in _allCells)
+        {
+            if(val == null)
+                continue;
+            if (val._pos.Equals(nAim))
+                return true;
+        }
+        return false;
     }
 
     private static void ClearCell()
